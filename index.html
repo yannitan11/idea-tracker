@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Idea Tracker</title>
+  <meta name="description" content="A calm space to capture design ideas and track them from spark to shipped." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>" />
+</head>
+<body data-route="board">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">💡</span>
+      <span class="brand-name">Idea Tracker</span>
+      <span id="stats" class="stats"></span>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab" data-route="board">Board</button>
+      <button class="tab" data-route="list">List</button>
+    </nav>
+
+    <div class="topbar-right">
+      <input id="global-search" class="search" type="search" placeholder="Search…  ( / )" aria-label="Search ideas" />
+      <button id="new-idea" class="btn primary">+ New idea</button>
+
+      <details id="menu" class="menu">
+        <summary class="icon-btn" aria-label="More" title="Data & export">⋯</summary>
+        <div class="menu-panel">
+          <a href="#" id="export-json">Export JSON</a>
+          <a href="#" id="export-md">Export Markdown</a>
+          <a href="#" id="import-json">Import JSON…</a>
+        </div>
+      </details>
+
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
