@@ -338,6 +338,10 @@ a:hover { text-decoration: underline; }
 
 /* ---- Detail view -------------------------------------------------------- */
 
+/* Fills the view so the gutters + area below the card are a click target
+   that dismisses back to the board. */
+.detail-backdrop { min-height: calc(100vh - 140px); cursor: default; }
+
 .detail {
   max-width: 780px; margin: 0 auto;
   background: var(--paper); border: 1px solid var(--border);

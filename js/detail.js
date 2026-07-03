@@ -19,6 +19,7 @@ export function renderDetail(root, id) {
   const prio = priorityById(idea.priority);
 
   root.innerHTML = `
+    <div class="detail-backdrop">
     <article class="detail">
       <a class="link-btn back" href="#/board">← Back to board</a>
 
@@ -82,7 +83,8 @@ export function renderDetail(root, id) {
           ${[...idea.notes].reverse().map(noteRow).join('') || '<li class="muted">No notes yet.</li>'}
         </ul>
       </section>
-    </article>`;
+    </article>
+    </div>`;
 
   wire(root, idea.id);
 }
@@ -107,6 +109,12 @@ function noteRow(note) {
 }
 
 function wire(root, id) {
+  // Click the empty area around the card to dismiss back to the board.
+  const backdrop = root.querySelector('.detail-backdrop');
+  backdrop.addEventListener('click', (e) => {
+    if (!e.target.closest('.detail')) location.hash = '#/board';
+  });
+
   // Stage / priority selects.
   root.querySelectorAll('[data-field]').forEach((sel) => {
     sel.addEventListener('change', () => updateIdea(id, { [sel.dataset.field]: sel.value }));
