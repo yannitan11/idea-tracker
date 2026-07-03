@@ -92,6 +92,16 @@ function closeMenu() { const d = document.querySelector('#menu'); if (d) d.open 
 // Keyboard shortcuts --------------------------------------------------------
 const isTyping = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable);
 document.addEventListener('keydown', (e) => {
+  if (document.querySelector('.modal-overlay')) return; // an open modal owns its keys (incl. Esc)
+  if (e.key === 'Escape') {
+    // Esc backs out of the detail page — but not while editing a field inline
+    // (the inline editor's own Esc handler cancels that and stops propagation).
+    if (currentRoute().name === 'detail' && !isTyping(document.activeElement)) {
+      e.preventDefault();
+      location.hash = '#/board';
+    }
+    return;
+  }
   if (isTyping(document.activeElement)) return;
   if (e.key === 'n') { e.preventDefault(); openCapture(); }
   else if (e.key === '/') { e.preventDefault(); searchInput.focus(); }

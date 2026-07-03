@@ -221,7 +221,7 @@ function beginEdit(el, id) {
   const onBlur = () => commit(true);
   editor.addEventListener('blur', onBlur);
   editor.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); commit(false); }
     if (e.key === 'Enter' && !multiline) { e.preventDefault(); commit(true); }
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); commit(true); }
   });
