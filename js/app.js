@@ -46,8 +46,9 @@ function renderStats() {
 
 // ---- Wiring ---------------------------------------------------------------
 
-document.querySelector('#new-idea').addEventListener('click', () =>
-  openCapture((idea) => { location.hash = `#/idea/${idea.id}`; }));
+// After creating, just close the modal — the new card appears in the current
+// view (board/list) via the store subscription; no jump to the detail page.
+document.querySelector('#new-idea').addEventListener('click', () => openCapture());
 
 tabs.forEach((tab) => tab.addEventListener('click', () => { location.hash = `#/${tab.dataset.route}`; }));
 
@@ -92,7 +93,7 @@ function closeMenu() { const d = document.querySelector('#menu'); if (d) d.open 
 const isTyping = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable);
 document.addEventListener('keydown', (e) => {
   if (isTyping(document.activeElement)) return;
-  if (e.key === 'n') { e.preventDefault(); openCapture((idea) => { location.hash = `#/idea/${idea.id}`; }); }
+  if (e.key === 'n') { e.preventDefault(); openCapture(); }
   else if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
   else if (e.key === 'b') { location.hash = '#/board'; }
   else if (e.key === 'l') { location.hash = '#/list'; }
