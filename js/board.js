@@ -70,6 +70,7 @@ export function cardHtml(idea) {
 
   return `
     <article class="card deco-${deco}" draggable="true" data-id="${idea.id}"
+      tabindex="0" role="button" aria-label="Open idea: ${escapeHtml(idea.title)}"
       style="--prio:${prio.accent}; --accent:${stage.accent}; --rot:${rot}deg; --drot:${drot}deg">
       ${decoHtml(deco)}
       <h3 class="card-title">${escapeHtml(idea.title)}</h3>
@@ -83,8 +84,10 @@ export function cardHtml(idea) {
 
 function wireDnd(root) {
   root.querySelectorAll('.card').forEach((card) => {
-    card.addEventListener('click', () => {
-      location.hash = `#/idea/${card.dataset.id}`;
+    const open = () => { location.hash = `#/idea/${card.dataset.id}`; };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
     card.addEventListener('dragstart', (e) => {
       dragId = card.dataset.id;

@@ -8,6 +8,7 @@ import { renderDetail } from './detail.js';
 import { STAGES } from './config.js';
 import { withinDays, debounce } from './util.js';
 import { exportJSON, exportMarkdown, importJSONFile } from './export.js';
+import { toast } from './toast.js';
 
 const view = document.querySelector('#view');
 const searchInput = document.querySelector('#global-search');
@@ -47,8 +48,10 @@ function renderStats() {
 // ---- Wiring ---------------------------------------------------------------
 
 // After creating, just close the modal — the new card appears in the current
-// view (board/list) via the store subscription; no jump to the detail page.
-document.querySelector('#new-idea').addEventListener('click', () => openCapture());
+// view (board/list) via the store subscription; a toast confirms it (since we
+// no longer jump to the detail page).
+document.querySelector('#new-idea').addEventListener('click', () => openCapture(onCreated));
+function onCreated() { toast('Idea added'); }
 
 tabs.forEach((tab) => tab.addEventListener('click', () => { location.hash = `#/${tab.dataset.route}`; }));
 
@@ -82,7 +85,7 @@ document.querySelector('#import-json').addEventListener('click', (e) => {
   input.type = 'file';
   input.accept = 'application/json,.json';
   input.addEventListener('change', () => {
-    if (input.files[0]) importJSONFile(input.files[0]).catch((err) => alert('Import failed: ' + err.message));
+    if (input.files[0]) importJSONFile(input.files[0]).catch((err) => toast('Import failed: ' + err.message, 'error'));
   });
   input.click();
   closeMenu();
@@ -103,7 +106,7 @@ document.addEventListener('keydown', (e) => {
     return;
   }
   if (isTyping(document.activeElement)) return;
-  if (e.key === 'n') { e.preventDefault(); openCapture(); }
+  if (e.key === 'n') { e.preventDefault(); openCapture(onCreated); }
   else if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
   else if (e.key === 'b') { location.hash = '#/board'; }
   else if (e.key === 'l') { location.hash = '#/list'; }

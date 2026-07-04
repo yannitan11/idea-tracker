@@ -2,6 +2,7 @@
 
 import { getAll, replaceAll } from './store.js';
 import { stageById, priorityById } from './config.js';
+import { toast } from './toast.js';
 
 function download(filename, text, type) {
   const blob = new Blob([text], { type });
@@ -18,7 +19,9 @@ function stamp() {
 }
 
 export function exportJSON() {
-  download(`design-ideas-${stamp()}.json`, JSON.stringify(getAll(), null, 2), 'application/json');
+  const ideas = getAll();
+  download(`design-ideas-${stamp()}.json`, JSON.stringify(ideas, null, 2), 'application/json');
+  toast(`Exported ${ideas.length} ideas as JSON`);
 }
 
 export function exportMarkdown() {
@@ -46,13 +49,24 @@ export function exportMarkdown() {
     lines.push('---', '');
   }
   download(`design-ideas-${stamp()}.md`, lines.join('\n'), 'text/markdown');
+  toast(`Exported ${ideas.length} ideas as Markdown`);
 }
 
 export function importJSONFile(file) {
   return file.text().then((text) => {
-    const data = JSON.parse(text);
-    if (!Array.isArray(data)) throw new Error('Expected a JSON array of ideas.');
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      toast("That file isn't valid JSON.", 'error');
+      return;
+    }
+    if (!Array.isArray(data)) {
+      toast('Expected a JSON array of ideas.', 'error');
+      return;
+    }
     if (!confirm(`Import ${data.length} ideas? This replaces everything currently stored.`)) return;
-    replaceAll(data);
+    const n = replaceAll(data);
+    toast(`Imported ${n} ideas`);
   });
 }

@@ -7,6 +7,7 @@ import {
   parseTags, parseLinks, isValidUrl, attachListBehavior,
   buildFormatToolbar, withToolbar,
 } from './util.js';
+import { toast } from './toast.js';
 
 export function renderDetail(root, id) {
   const idea = getById(id);
@@ -125,6 +126,7 @@ function wire(root, id) {
     if (confirm('Delete this idea? This cannot be undone.')) {
       deleteIdea(id);
       location.hash = '#/board';
+      toast('Idea deleted');
     }
   });
 

@@ -86,7 +86,7 @@ function rowHtml(idea) {
     ? escapeHtml(idea.description.replace(/[#*`>-]/g, '').slice(0, 120))
     : '';
   return `
-    <li class="idea-row" data-id="${idea.id}">
+    <li class="idea-row" data-id="${idea.id}" tabindex="0" role="button" aria-label="Open idea: ${escapeHtml(idea.title)}">
       <span class="row-stage" style="--accent:${stage.accent}" title="${escapeHtml(stage.label)}"></span>
       <div class="row-main">
         <div class="row-top">
@@ -118,6 +118,10 @@ function wire(root) {
     renderList(root);
   });
   root.querySelectorAll('.idea-row').forEach((row) => {
-    row.addEventListener('click', () => { location.hash = `#/idea/${row.dataset.id}`; });
+    const open = () => { location.hash = `#/idea/${row.dataset.id}`; };
+    row.addEventListener('click', open);
+    row.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
   });
 }

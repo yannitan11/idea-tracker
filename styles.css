@@ -61,6 +61,37 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+html { scroll-behavior: smooth; }
+
+/* Respect users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Visible keyboard focus for everything interactive (mouse users unaffected). */
+.btn:focus-visible, .icon-btn:focus-visible, .tab:focus-visible,
+.link-btn:focus-visible, .fmt-btn:focus-visible, .menu summary:focus-visible,
+.card:focus-visible, .idea-row:focus-visible, a:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+.card:focus-visible, .idea-row:focus-visible { outline-offset: 3px; }
+
+/* Align digits in data-ish, monospaced spots. */
+.stats, .count, .list-count, .detail-dates, .row-date,
+.card-meta, .note-head time, .count-inline {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Kill orphaned words in display type / balance long body lines. */
+.card-title, .detail-title, .column-head h2, .row-top h3,
+.modal-head h2, .empty-state { text-wrap: balance; }
+.desc p, .row-snippet, .note-body { text-wrap: pretty; }
 
 body {
   margin: 0;
@@ -184,7 +215,7 @@ a:hover { text-decoration: underline; }
 .view { padding: 26px 24px 64px; }
 
 .empty-state {
-  max-width: 520px; margin: 12vh auto; text-align: center;
+  max-width: 520px; margin: 12dvh auto; text-align: center;
   color: var(--text-muted); font-size: 20px; font-family: var(--font-hand);
 }
 .empty-state kbd {
@@ -207,7 +238,7 @@ a:hover { text-decoration: underline; }
 
 .column {
   display: flex; flex-direction: column;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100dvh - 150px);
   padding: 0 6px;
 }
 .column-head {
@@ -340,7 +371,7 @@ a:hover { text-decoration: underline; }
 
 /* Fills the view so the gutters + area below the card are a click target
    that dismisses back to the board. */
-.detail-backdrop { min-height: calc(100vh - 140px); cursor: default; }
+.detail-backdrop { min-height: calc(100dvh - 140px); cursor: default; }
 
 .detail {
   max-width: 780px; margin: 0 auto;
@@ -434,7 +465,7 @@ select.input { cursor: pointer; font-family: var(--font-mono); font-size: 12px; 
   position: fixed; inset: 0; z-index: 50;
   background: rgba(40, 34, 22, .4);
   display: flex; align-items: flex-start; justify-content: center;
-  padding: 11vh 20px 20px; animation: fade .12s ease;
+  padding: 11dvh 20px 20px; animation: fade .12s ease;
 }
 .modal {
   width: 100%; max-width: 520px;
@@ -468,3 +499,27 @@ select.input { cursor: pointer; font-family: var(--font-mono); font-size: 12px; 
   .detail { padding: 22px 20px 30px; }
   .detail-title { font-size: 30px; }
 }
+
+/* ---- Toasts ------------------------------------------------------------- */
+
+.toast-host {
+  position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%);
+  z-index: 60; display: flex; flex-direction: column-reverse; align-items: center;
+  gap: 8px; pointer-events: none;
+}
+.toast {
+  pointer-events: auto; cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--paper); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lift);
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: -.01em;
+  padding: 10px 15px; max-width: min(90vw, 380px);
+  opacity: 0; transform: translateY(10px) rotate(-.5deg);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show { opacity: 1; transform: translateY(0) rotate(-.5deg); }
+.toast::before { font-weight: 700; }
+.toast-success::before { content: "✓"; color: #22a06b; }
+.toast-error { border-color: var(--danger); color: var(--danger); }
+.toast-error::before { content: "✕"; }
